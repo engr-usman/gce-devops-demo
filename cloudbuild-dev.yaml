@@ -25,20 +25,16 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:latest']
 
-  # Step 4: Deploy to Cloud Run
+  # Deploy to dev environment
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args: [
-      'run', 'deploy', '${_SERVICE_NAME}',
+      'run', 'deploy', '${_SERVICE_NAME}-dev',
       '--image', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:$COMMIT_SHA',
       '--region', '${_REGION}',
       '--platform', 'managed',
       '--allow-unauthenticated',
-      '--port', '8080',
-      '--memory', '256Mi',
-      '--cpu', '1',
-      '--max-instances', '10',
-      '--set-env-vars', 'NODE_ENV=production'
+      '--set-env-vars', 'NODE_ENV=development'
     ]
 
   # Step 5: Ensure public access (backup step)
